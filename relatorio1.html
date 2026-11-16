@@ -148,6 +148,13 @@ a{color:inherit}
 .flap{font-variant-numeric:tabular-nums}
 @media print{.body .w{opacity:1!important}.body b{background-size:100% 3px!important}.readbar{display:none}}
 @media (prefers-reduced-motion:reduce){.body .w{opacity:1!important}.body b{background-size:100% 3px!important}}
+
+.toc{padding-right:16px;margin-right:-10px;scrollbar-width:thin;scrollbar-color:rgba(110,232,113,.45) transparent}
+.toc::-webkit-scrollbar{width:4px}
+.toc::-webkit-scrollbar-track{background:rgba(255,255,255,.05);border-radius:4px;margin:6px 0}
+.toc::-webkit-scrollbar-thumb{background:rgba(110,232,113,.45);border-radius:4px}
+.toc::-webkit-scrollbar-thumb:hover{background:var(--g)}
+.toc::-webkit-scrollbar-button{display:none;height:0}
 /* nav ui */
 .ui{position:fixed;z-index:20;font-family:Archivo;font-stretch:100%}
 .btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px;border-radius:100px;border:1px solid rgba(255,255,255,.18);background:rgba(13,13,13,.72);backdrop-filter:blur(10px);color:var(--w);font:700 14px Archivo;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:background .25s,color .25s,border-color .25s}
