@@ -147,7 +147,6 @@ a{color:inherit}
 .burst svg,.cover-logo .burst svg{transform:rotate(var(--tilt,0deg));transition:transform 1.2s var(--ease)}
 .flap{font-variant-numeric:tabular-nums}
 @media print{.body .w{opacity:1!important}.body b{background-size:100% 3px!important}.readbar{display:none}}
-@media (prefers-reduced-motion:reduce){.body .w{opacity:1!important}.body b{background-size:100% 3px!important}}
 
 .toc{padding-right:16px;margin-right:-10px;scrollbar-width:thin;scrollbar-color:rgba(110,232,113,.45) transparent}
 .toc::-webkit-scrollbar{width:4px}
@@ -159,28 +158,29 @@ a{color:inherit}
 /* transição entre páginas */
 .slide.out .rv,.slide.out .pop{opacity:1;transform:none;clip-path:inset(-10%);transition:none}.slide.out .ln>span,.slide.out .rx{transform:none;transition:none}.slide.out .body .w{opacity:1;transition:none}.slide.out .body b{background-size:100% 3px;transition:none}
 .slide.out{visibility:visible;z-index:2;pointer-events:none}
-.slide.out.fwd{animation:outF .75s var(--ease2) forwards}
-.slide.out.back{animation:outB .75s var(--ease2) forwards}
+.slide.out.fwd{animation:outF .9s var(--ease2) forwards}
+.slide.out.back{animation:outB .9s var(--ease2) forwards}
 .slide.in{z-index:3}
-.slide.in.fwd{animation:inF 1s var(--ease) both}
-.slide.in.back{animation:inB 1s var(--ease) both}
-@keyframes outF{to{transform:translateX(-7%) scale(.95);opacity:0}}
-@keyframes outB{to{transform:translateX(7%) scale(.95);opacity:0}}
-@keyframes inF{0%{transform:translateX(9%) scale(1.03);opacity:0;clip-path:inset(0 0 0 30%)}60%{opacity:1}100%{transform:none;opacity:1;clip-path:inset(0 0 0 0)}}
-@keyframes inB{0%{transform:translateX(-9%) scale(1.03);opacity:0;clip-path:inset(0 30% 0 0)}60%{opacity:1}100%{transform:none;opacity:1;clip-path:inset(0 0 0 0)}}
+.slide.in.fwd{animation:inF 1.15s var(--ease) both}
+.slide.in.back{animation:inB 1.15s var(--ease) both}
+@keyframes outF{to{transform:translateX(-18%) scale(.88) rotate(-1.5deg);opacity:0}}
+@keyframes outB{to{transform:translateX(18%) scale(.88) rotate(1.5deg);opacity:0}}
+@keyframes inF{0%{transform:translateX(22%) scale(1.08) rotate(1.5deg);opacity:0;clip-path:inset(0 0 0 45%)}60%{opacity:1}100%{transform:none;opacity:1;clip-path:inset(0 0 0 0)}}
+@keyframes inB{0%{transform:translateX(-22%) scale(1.08) rotate(-1.5deg);opacity:0;clip-path:inset(0 45% 0 0)}60%{opacity:1}100%{transform:none;opacity:1;clip-path:inset(0 0 0 0)}}
 .slide.in .secnum{animation:secIn 1.3s var(--ease) both}
 @keyframes secIn{from{transform:translateX(160px);opacity:0}}
 .slide.in .burst{animation:burstIn 1.4s var(--ease) both}
 @keyframes burstIn{from{transform:scale(.4) rotate(-90deg);opacity:0}}
 .sweep{position:fixed;inset:0;z-index:15;pointer-events:none;overflow:hidden}
-.sweep i{position:absolute;top:-20%;bottom:-20%;width:14vw;transform:translateX(-30vw) skewX(-14deg)}
+.sweep i{position:absolute;top:-20%;bottom:-20%;width:26vw;transform:translateX(-40vw) skewX(-14deg)}
 .sweep i:nth-child(1){background:var(--g);opacity:.9}
-.sweep i:nth-child(2){background:var(--p);width:5vw;opacity:.85}
-.sweep.fwd i{animation:swF .85s var(--ease2) forwards}
-.sweep.back i{animation:swB .85s var(--ease2) forwards}
+.sweep i:nth-child(2){background:var(--p);width:9vw;opacity:.9}
+.sweep i:nth-child(3){background:var(--o);width:3vw;opacity:.9;animation-delay:.14s!important}
+.sweep.fwd i{animation:swF 1s var(--ease2) forwards}
+.sweep.back i{animation:swB 1s var(--ease2) forwards}
 .sweep i:nth-child(2){animation-delay:.07s!important}
-@keyframes swF{from{transform:translateX(-30vw) skewX(-14deg)}to{transform:translateX(130vw) skewX(-14deg)}}
-@keyframes swB{from{transform:translateX(130vw) skewX(-14deg)}to{transform:translateX(-30vw) skewX(-14deg)}}
+@keyframes swF{from{transform:translateX(-40vw) skewX(-14deg)}to{transform:translateX(140vw) skewX(-14deg)}}
+@keyframes swB{from{transform:translateX(140vw) skewX(-14deg)}to{transform:translateX(-40vw) skewX(-14deg)}}
 @media print{.sweep{display:none}.slide{animation:none!important;transform:none!important;opacity:1!important;clip-path:none!important}}
 /* nav ui */
 .ui{position:fixed;z-index:20;font-family:Archivo;font-stretch:100%}
@@ -225,11 +225,6 @@ a{color:inherit}
 .mat{text-decoration:none;display:flex;flex-direction:column;justify-content:space-between;min-height:560px}.mat .lk{align-self:flex-start}.mat:hover{border-color:var(--g)}
 .kpi-big{font-family:Archivo;font-stretch:62%;font-weight:900;line-height:.82;letter-spacing:-.02em}
 
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation:none!important;transition:none!important}
-  .rv,.pop{opacity:1!important;transform:none!important;clip-path:none!important}
-  .ln>span,.rx{transform:none!important}
-}
 
 /* PRINT / PDF */
 @page{size:1920px 1080px;margin:0}
@@ -523,7 +518,7 @@ a{color:inherit}
 
 </div></div>
 
-<div class="sweep" id="sweep"><i></i><i></i></div>
+<div class="sweep" id="sweep"><i></i><i></i><i></i></div>
 
 <!-- UI -->
 <div class="ui bot">
@@ -572,7 +567,7 @@ const slides=[...document.querySelectorAll('.slide')];
 const N=slides.length, toc=document.getElementById('toc');
 slides.forEach((s,i)=>{const li=document.createElement('li');const b=document.createElement('button');b.textContent=s.dataset.title;b.onclick=()=>{go(i);toggle(false)};li.appendChild(b);toc.appendChild(li)});
 const tocBtns=[...toc.querySelectorAll('button')];
-const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduce=false;
 let cur=-1,busy=false;
 
 function countUp(slide){
@@ -609,7 +604,7 @@ function go(i){
   nw.classList.add('in',dir);
   kick=dir==='fwd'?1:-1;
   show(i);
-  setTimeout(()=>{old.classList.remove('out','fwd','back');busy=false},780);
+  setTimeout(()=>{old.classList.remove('out','fwd','back');busy=false},930);
   setTimeout(()=>{nw.classList.remove('in','fwd','back')},1450);
 }
 document.getElementById('next').onclick=()=>go(cur+1);
