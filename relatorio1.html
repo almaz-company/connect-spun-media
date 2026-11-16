@@ -134,6 +134,20 @@ a{color:inherit}
 .mat{min-height:440px!important}
 .pt .push p{min-height:2.9em}
 .riw .card{padding:34px}
+
+/* fx: leitura guiada */
+.body .w{opacity:.22;transition:opacity .5s ease}
+.active .body .w{opacity:1;transition-delay:calc(var(--wi) * 22ms + 700ms)}
+.body b{background-image:linear-gradient(var(--g),var(--g));background-repeat:no-repeat;background-position:0 100%;background-size:0% 3px;padding-bottom:2px;transition:background-size .9s var(--ease)}
+.active .body b{background-size:100% 3px;transition-delay:calc(var(--bi) * 22ms + 900ms)}
+.t-purple .body b{background-image:linear-gradient(#fff,#fff)}
+.readbar{position:absolute;left:0;top:0;height:3px;width:100%;background:var(--g);transform-origin:left;transform:scaleX(0);z-index:5;opacity:.9}
+.readbar.run{animation:rb 2.6s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes rb{0%{transform:scaleX(0);opacity:.9}85%{transform:scaleX(1);opacity:.9}100%{transform:scaleX(1);opacity:0}}
+.burst svg,.cover-logo .burst svg{transform:rotate(var(--tilt,0deg));transition:transform 1.2s var(--ease)}
+.flap{font-variant-numeric:tabular-nums}
+@media print{.body .w{opacity:1!important}.body b{background-size:100% 3px!important}.readbar{display:none}}
+@media (prefers-reduced-motion:reduce){.body .w{opacity:1!important}.body b{background-size:100% 3px!important}}
 /* nav ui */
 .ui{position:fixed;z-index:20;font-family:Archivo;font-stretch:100%}
 .btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px;border-radius:100px;border:1px solid rgba(255,255,255,.18);background:rgba(13,13,13,.72);backdrop-filter:blur(10px);color:var(--w);font:700 14px Archivo;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:background .25s,color .25s,border-color .25s}
@@ -204,6 +218,7 @@ a{color:inherit}
 <div class="grain"></div>
 
 <div class="viewport"><div class="stage" id="stage">
+<div class="readbar" id="readbar"></div>
 
 <!-- 01 CAPA -->
 <section class="slide t-ink" data-title="Capa">
@@ -544,6 +559,7 @@ function show(i){
   document.getElementById('bar').style.transform=`scaleX(${(i+1)/N})`;
   tocBtns.forEach((b,k)=>b.classList.toggle('on',k===i));
   countUp(slides[i]);
+  if(typeof fx==="function")fx(slides[i]);
   bgTheme(slides[i]);
   try{history.replaceState(null,'','#'+(i+1))}catch(e){}
 }
@@ -616,6 +632,61 @@ function frame(t){
 }
 requestAnimationFrame(frame);
 
+
+// fx 1+2: palavras acendem em sequência, negritos ganham sublinhado verde
+document.querySelectorAll('.body').forEach(p=>{
+  let n=0;
+  const walk=node=>{
+    [...node.childNodes].forEach(c=>{
+      if(c.nodeType===3){
+        const frag=document.createDocumentFragment();
+        c.textContent.split(/(\s+)/).forEach(t=>{
+          if(!t)return;
+          if(/^\s+$/.test(t)){frag.appendChild(document.createTextNode(t));return}
+          const sp=document.createElement('span');sp.className='w';sp.style.setProperty('--wi',n++);sp.textContent=t;frag.appendChild(sp);
+        });
+        c.replaceWith(frag);
+      }else if(c.nodeType===1){
+        if(c.tagName==='B')c.style.setProperty('--bi',n);
+        walk(c);
+      }
+    });
+  };
+  walk(p);
+});
+// fx 3: datas e números giram como painel antes de parar
+const flaps=[...document.querySelectorAll('.tag, .tbl td.dt')].filter(el=>/\d/.test(el.textContent)&&!el.children.length);
+flaps.forEach(el=>{el.dataset.final=el.textContent;el.classList.add('flap')});
+const CH='0123456789';
+function flap(slide){
+  if(reduce)return;
+  slide.querySelectorAll('.flap').forEach((el,k)=>{
+    const fin=el.dataset.final,t0=performance.now()+350+k*70,dur=700;
+    const tick=t=>{
+      const p=(t-t0)/dur;
+      if(p>=1){el.textContent=fin;return}
+      const lock=Math.max(0,Math.floor(p*fin.length));
+      el.textContent=[...fin].map((c,i)=>i<lock||!/\d/.test(c)?c:CH[Math.random()*10|0]).join('');
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+}
+// fx 4: símbolo inclina na direção do cursor
+let mxq=false;
+addEventListener('mousemove',e=>{
+  if(reduce||mxq)return;mxq=true;
+  requestAnimationFrame(()=>{
+    const tilt=((e.clientX/innerWidth)-.5)*36+((e.clientY/innerHeight)-.5)*12;
+    stage.style.setProperty('--tilt',tilt.toFixed(1)+'deg');mxq=false;
+  });
+},{passive:true});
+// fx 5: barra de leitura do slide
+const rb=document.getElementById('readbar');
+function fx(slide){
+  if(!reduce){rb.classList.remove('run');void rb.offsetWidth;rb.classList.add('run')}
+  flap(slide);
+}
 // init
 let h=0;try{h=parseInt(location.hash.slice(1))}catch(e){}
 show(h>0&&h<=N?h-1:0);
